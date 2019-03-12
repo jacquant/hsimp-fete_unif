@@ -1,0 +1,18 @@
+{
+    "name": "How Secure Is My Password?",
+    "short_name": "HSIMP",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#376a82",
+    "background_color": "#376a82",
+    "description": "How long it would take a computer to crack your password?",
+    "icons": [{
+        "src": "/apple-touch-icon.png",
+        "sizes": "192x192",
+        "type": "image/png"
+    },{
+        "src": "/app.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }]
+}

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<!-- Mirrored from howsecureismypassword.net/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 12 Mar 2019 12:19:34 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>How Secure Is My Password?</title>
+    <meta name="description" content="How long it would take a computer to crack your password?">
+    <meta name="author" content="Small Hadron Collider">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="app.05442338.css">
+    <meta name="theme-color" content="#376a82">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="icon" sizes="196x196" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon.png">
+</head>
+<body>
+<div id="app" class="container">
+    <div class="content">
+        <h1 role="banner" class="header title">Quelle est la sécurité de mon mot de passe?</h1>
+        <form accept-charset="UTF-8">
+            <div>
+                <label class="hidden" for="password">ENTREZ VOTRE MOT DE PASSE</label>
+                <input id="password" class="password-input" placeholder="ENTREZ VOTRE MOT DE PASSE" type="password">
+            </div>
+        </form>
+        <div id="password-time" class="hsimp-time"></div>
+        <ul id="password-checks" class="hsimp-checks"></ul>
+        <div class="sponsor">
+            <p class="sponsor__text">Contenu sponsorisé par <a class="sponsor__link"
+                                                               href="https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=SiteFooter&amp;utm_term=FR">Dashlane</a>:
+                n'oubliez plus un seul mot de passe</p>
+        </div>
+        <div class="footer" role="contentinfo">
+            <p class="footer__translation"> Traduction par Christophe Illgen</p>
+            <p class="footer__sponsored">
+                Sponsorisé par
+                <a data-tracker-label="Dashlane: Footer"
+                   href="https://www.dashlane.com/passwordmanager?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=SiteFooter">Dashlane
+                    Password Manager</a>
+            </p>
+            <p class="footer__attrbution">Les 10.000 meilleurs mots de passe par <a href="https://twitter.com/m8urnett">Mark
+                Burnett</a> / Police de caractères par <a
+                    href="http://www.theleagueofmoveabletype.com/fonts/7-league-gothic">The League of Movable Type</a>
+            </p>
+            <p class="footer__source-code">Le <a href="https://github.com/howsecureismypassword/hsimp">code source</a>
+                pour ce site et le <a href="https://github.com/howsecureismypassword/jquery">plugin jQuery</a> HSIMP
+                officiel peuvent se trouver sur <a href="https://github.com/howsecureismypassword">GitHub</a></p>
+            <p class="footer__copyright">© <a href="https://smallhadroncollider.com">Small Hadron Collider</a>, 2019 /
+                Version 8.0</p>
+            <p class="footer__disclaimer">Ce site a un objectif éducatif. A cause des limites des technologies
+                utilisées, les résultats peuvent ne pas toujours être exactes. Votre mot de passe ne sera pas envoyé sur
+                Internet.</p>
+        </div>
+    </div>
+</div>
+
+<script src="hsimp.min.js"></script>
+<script>
+    (function (doc) {
+        var passwordInput = doc.getElementById("password-box"),
+            timeDiv = doc.getElementById("password-time"),
+            checksList = doc.getElementById("password-checks");
+
+        // Code to render the time returned by HSIMP
+        var renderTime = function (time, input) {
+            timeDiv.innerHTML = time || "";
+        };
+
+        // Code to output the checks returned by HSIMP
+        var renderChecks = function (checks, input) {
+            checksList.innerHTML = "";
+
+            for (var i = 0, l = checks.length; i < l; i++) {
+                var li = doc.createElement("li"),
+                    title = doc.createElement("h2"),
+                    message = doc.createElement("p");
+
+                title.innerHTML = checks[i].name;
+                li.appendChild(title);
+
+                message.innerHTML = checks[i].message;
+                li.appendChild(message);
+
+                checksList.appendChild(li);
+            }
+        };
+
+        // Setup the HSIMP object
+        var attachTo = hsimp({
+            options: {
+                calculationsPerSecond: 10e9, // 10 billion calculations per second
+                good: 31557600e9, // 1 billion years
+                ok: 31557600e3 // 1 thousand years
+            },
+            outputTime: renderTime,
+            outputChecks: renderChecks
+        });
+
+        // setup custom values for "instantly"/"forever"
+        hsimp.setDictionary({
+            "instantly": "Immediately",
+            "forever": "Aaaaaaaaaaaaaaaages",
+        });
+
+        // Run the HSIMP
+        attachTo(passwordInput);
+    }(this.document));
+</script>
+</body>
+
+<!-- Mirrored from howsecureismypassword.net/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 12 Mar 2019 12:19:39 GMT -->
+</html>
