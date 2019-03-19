@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html id="color" lang="en">
 
 <!-- Mirrored from howsecureismypassword.net/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 12 Mar 2019 12:19:34 GMT -->
 <!-- Added by HTTrack -->
@@ -28,6 +28,7 @@
             margin: 0 auto;
             max-width: 1024px;
         }
+
         ul#password-checks > li > h2 {
             font-size: 1.5em;
             line-height: 1em;
@@ -35,9 +36,10 @@
             background: #222;
             color: #fff;
         }
+
         ul#password-checks > li > p {
             border: 1px solid #fff;
-            background: rgba(255,255,255,.6);
+            background: rgba(255, 255, 255, .6);
             box-sizing: border-box;
             color: #222;
             margin: 0 auto;
@@ -63,21 +65,24 @@
             </div>
         </form>
         <script>
-            document.getElementById("password-box").addEventListener("keydown", function(){
+            document.getElementById("password-box").addEventListener("keydown", function () {
                 document.getElementById("result_div").style.display = "block";
             });
         </script>
 
 
         <div class="result" id="result_div" style="display:none">
-            <p class="result__text result__before">It would take a computer about</p>
+            <p class="result__text result__before">Cela prendrait à un ordinateur</p>
             <p class="result__text result__time" id="password-time" style=""></p>
-            <p class="result__text result__after">to crack your password</p>
+            <p class="result__text result__after">pour trouver votre mot de passe</p>
             <p class="result__text result__advertising">
-                Why not create even stronger passwords with <a href="https://www.dashlane.com/lp/neverforget-teal">Dashlane</a>? <a href="https://www.dashlane.com/lp/neverforget-teal">It's free!</a>
+                Pourquoi ne pas essayer <a href="https://www.dashlane.com/lp/neverforget-teal">Dashlane</a>pour créer et se souvenir de mots de passe encore plus sécurisés?
+                <a href="https://www.dashlane.com/lp/neverforget-teal">C'est gratuit!</a>
             </p>
             <p class="result__tweet">
-                <a class="result__link" href="http://twitter.com/home/?status=It would take a computer about 898 thousand years to crack my password!%0d%0dhttp://hsim.pw">Tweet Your Result</a>
+                <a class="result__link"
+                   href="http://twitter.com/home/?status=It would take a computer about 898 thousand years to crack my password!%0d%0dhttp://hsim.pw">Tweet
+                    Your Result</a>
             </p>
         </div>
 
@@ -88,9 +93,6 @@
                                                                href="https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=SiteFooter&amp;utm_term=FR">Dashlane</a>:
                 n'oubliez plus un seul mot de passe</p>
         </div>
-
-
-
 
 
         <div class="footer" role="contentinfo">
@@ -126,270 +128,377 @@
 
         // Code to render the time returned by HSIMP
         var renderTime = function (time, input) {
-            timeDiv.innerHTML = time || "";
-            console.log(time);
+                timeDiv.innerHTML = time || "";
+            renderFont(time);
+        };
+        var renderFont = function (time) {
+            if (time) {
+                doc.getElementById("result_div").style.display = "block";
+                splitted_time = time.split(" ");
+                var time_in_seconds = 0;
+                if (splitted_time.length > 3) {
+                    splitted_time[1] = splitted_time[1] + " " + splitted_time[2];
+                    splitted_time.splice(2, 1);
+                };
+                if (splitted_time.length === 3) {
+                    var time1 = parseInt(splitted_time[0]);
+                    var time2 = Math.pow(10, parseInt(NamedNumberDic[splitted_time[1]]));
+                    for (let i = 0, l = PeriodDic.length; i < l; i++) {
+                        if (PeriodDic[i].singular === splitted_time[2]) {
+                            var time3 = parseInt(PeriodDic[i].seconds);
+                            break;
+                        } else if (PeriodDic[i].plural === splitted_time[2]) {
+                            var time3 = PeriodDic[i].seconds;
+                            break;
+                        } else {
+                            //
+                        }
+                    }
+                    time_in_seconds = time1 * time2 * time3;
+                } else if (splitted_time.length === 2) { // ok
+                    var time1 = parseInt(splitted_time[0]);
+                    for (let i = 0, l = PeriodDic.length; i < l; i++) {
+                        if (PeriodDic[i].singular === splitted_time[1]) {
+                            var time3 = parseInt(PeriodDic[i].seconds);
+                            break;
+                        } else if (PeriodDic[i].plural === splitted_time[1]) {
+                            var time3 = PeriodDic[i].seconds;
+                            break;
+                        } else {
+                            //
+                        }
+                    }
+                    time_in_seconds = time1 * time3;
+                } else if (splitted_time.length === 1) {
+                    if (splitted_time[0] === "Instantanément") {
+                        time_in_seconds = 0
+                    }
+                } else {
+                }
+                if (time_in_seconds > 31557600e9) {
+                    doc.getElementById("color").className = "good"
+                } else if (time_in_seconds > 31557600e3) {
+                    doc.getElementById("color").className = "ok"
+                } else {
+                    doc.getElementById("color").className = "bad"
+                }
+            } else {
+                doc.getElementById("result_div").style.display = "none";
+                doc.getElementById("color").className = "neutral";
+            }
         };
 
-        // Code to output the checks returned by HSIMP
-        var renderChecks = function (checks, input) {
-            checksList.innerHTML = "";
+    // Code to output the checks returned by HSIMP
+    var renderChecks = function (checks, input) {
+        checksList.innerHTML = "";
+        if (checks.length > 0) {
+            let conseil_block = doc.createElement("div"),
+                conseil_title = doc.createElement("h3"),
+                conseil_message_title = doc.createElement("div"),
+                conseil_message_block1 = doc.createElement("div"),
+                conseil_message_block2 = doc.createElement("div"),
+                conseil_message_block_text1 = doc.createElement("p"),
+                conseil_message_block_text2 = doc.createElement("p");
+            conseil_block.classList.add("checks__item", "checks__level", "checks__level--advertising");
+            conseil_title.classList.add("block__header", "header", "header--sub-title");
+            conseil_message_title.classList.add("block");
+            conseil_message_title.innerText = "Conseil: Utilisez un Gestionnaire de mots de passe pour protéger et vous souvenir facilement de vos mots de passe";
+            conseil_title.appendChild(conseil_message_title);
+            conseil_block.appendChild(conseil_title);
 
-            for (var i = 0, l = checks.length; i < l; i++) {
-                var li = doc.createElement("li"),
-                    title = doc.createElement("h2"),
-                    message = doc.createElement("p");
+            conseil_message_block1.classList.add("block__body", "checks__item");
+            conseil_message_block2.classList.add("block");
+            conseil_message_block_text1.innerHTML = "“Dashlane changera votre vie. N'attendez pas.” - David Pogue (New York Times)";
+            conseil_message_block2.appendChild(conseil_message_block_text1);
+            conseil_message_block_text2.innerHTML = "<a data-tracker-label=\"Dashlane: Conseil\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=Tip&amp;utm_term=FR\">Obtenez Dashlane - C'est Gratuit!</a>"
+            conseil_message_block2.appendChild(conseil_message_block_text2);
+            conseil_message_block1.appendChild(conseil_message_block2);
+            conseil_block.appendChild(conseil_message_block1);
 
-                title.innerHTML = checks[i].name;
-                li.appendChild(title);
+            checksList.appendChild(conseil_block);
+        }
+        for (var i = 0, l = checks.length; i < l; i++) {
+            let conseil_block = doc.createElement("div"),
+                conseil_title = doc.createElement("h3"),
+                conseil_message_title = doc.createElement("div"),
+                conseil_message_block1 = doc.createElement("div"),
+                conseil_message_block2 = doc.createElement("div"),
+                conseil_message_block_text1 = doc.createElement("p"),
+                conseil_message_block_text2 = doc.createElement("p");
+            conseil_block.classList.add("checks__item", "checks__level", "checks__level--" + checks[i].level);
+            conseil_title.classList.add("block__header", "header", "header--sub-title");
+            conseil_message_title.classList.add("block");
+            conseil_message_title.innerHTML = checks[i].name;
+            conseil_title.appendChild(conseil_message_title);
+            conseil_block.appendChild(conseil_title);
 
-                message.innerHTML = checks[i].message;
-                li.appendChild(message);
+            conseil_message_block1.classList.add("block__body", "checks__item");
+            conseil_message_block2.classList.add("block");
+            conseil_message_block_text1.innerHTML = checks[i].message;
+            conseil_message_block2.appendChild(conseil_message_block_text1);
+            conseil_message_block_text2.innerHTML = checks[i].conseil;
+            conseil_message_block2.appendChild(conseil_message_block_text2);
+            conseil_message_block1.appendChild(conseil_message_block2);
+            conseil_block.appendChild(conseil_message_block1);
+            checksList.append(conseil_block);
 
-                checksList.appendChild(li);
-            }
-        };
+        }
+    };
 
-        // Setup the HSIMP object
-        var attachTo = hsimp({
-            options: {
-                calculationsPerSecond: 10e9, // 10 billion calculations per second
-                good: 31557600e9, // 1 billion years
-                ok: 31557600e3 // 1 thousand years
-            },
-            outputTime: renderTime,
-            outputChecks: renderChecks
-        });
+    // Setup the HSIMP object
+    var attachTo = hsimp({
+        options: {
+            calculationsPerSecond: 10e9, // 10 billion calculations per second
+            good: 31557600e9, // 1 billion years
+            ok: 31557600e3 // 1 thousand years
+        },
+        outputTime: renderTime,
+        outputChecks: renderChecks
+    });
 
-        hsimp.setDictionary({
-            "instantly": "Instantanément",
-            "forever": "Une infinité de temps",
-        });
+    hsimp.setDictionary({
+        "instantly": "Instantanément",
+        "forever": "Une infinité de temps",
+    });
+    const PeriodDic = [{
+        "singular": "yoctoseconde",
+        "plural": "yoctosecondes",
+        "seconds": 1e-24
+    },
+        {
+            "singular": "zeptoseconde",
+            "plural": "zeptosecondes",
+            "seconds": 1e-21
+        },
+        {
+            "singular": "attoseconde",
+            "plural": "attosecondes",
+            "seconds": 1e-18
+        },
+        {
+            "singular": "femtoseconde",
+            "plural": "femtosecondes",
+            "seconds": 1e-15
+        },
+        {
+            "singular": "picoseconde",
+            "plural": "picosecondes",
+            "seconds": 1e-12
+        },
+        {
+            "singular": "nanoseconde",
+            "plural": "nanosecondes",
+            "seconds": 1e-9
+        },
+        {
+            "singular": "microseconde",
+            "plural": "microsecondes",
+            "seconds": 1e-6
+        },
+        {
+            "singular": "milliseconde",
+            "plural": "millisecondes",
+            "abbreviations": ["ms", "msec"],
+            "seconds": 1e-3
+        },
+        {
+            "singular": "seconde",
+            "plural": "secondes",
+            "abbreviations": ["s", "sec", "secs"],
+            "seconds": 1
+        },
+        {
+            "singular": "minute",
+            "plural": "minutes",
+            "abbreviations": ["m", "min", "mins"],
+            "seconds": 60
+        },
+        {
+            "singular": "heure",
+            "plural": "heures",
+            "abbreviations": ["h"],
+            "seconds": 3600
+        },
+        {
+            "singular": "jour",
+            "plural": "jours",
+            "seconds": 86400
+        },
+        {
+            "singular": "semaine",
+            "plural": "semaines",
+            "seconds": 604800
+        },
+        {
+            "singular": "mois",
+            "plural": "mois",
+            "seconds": 2626560
+        },
+        {
+            "singular": "année",
+            "plural": "années",
+            "seconds": 31557600
+        }];
+    hsimp.setPeriodDictionary(PeriodDic);
 
-        hsimp.setPeriodDictionary([
-            {
-                "singular": "yoctoseconde",
-                "plural": "yoctosecondes",
-                "seconds": 1e-24
-            },
-            {
-                "singular": "zeptoseconde",
-                "plural": "zeptosecondes",
-                "seconds": 1e-21
-            },
-            {
-                "singular": "attoseconde",
-                "plural": "attosecondes",
-                "seconds": 1e-18
-            },
-            {
-                "singular": "femtoseconde",
-                "plural": "femtosecondes",
-                "seconds": 1e-15
-            },
-            {
-                "singular": "picoseconde",
-                "plural": "picosecondes",
-                "seconds": 1e-12
-            },
-            {
-                "singular": "nanoseconde",
-                "plural": "nanosecondes",
-                "seconds": 1e-9
-            },
-            {
-                "singular": "microseconde",
-                "plural": "microsecondes",
-                "seconds": 1e-6
-            },
-            {
-                "singular": "milliseconde",
-                "plural": "millisecondes",
-                "abbreviations": ["ms", "msec"],
-                "seconds": 1e-3
-            },
-            {
-                "singular": "seconde",
-                "plural": "secondes",
-                "abbreviations": ["s", "sec", "secs"],
-                "seconds": 1
-            },
-            {
-                "singular": "minute",
-                "plural": "minutes",
-                "abbreviations": ["m", "min", "mins"],
-                "seconds": 60
-            },
-            {
-                "singular": "heure",
-                "plural": "heures",
-                "abbreviations": ["h"],
-                "seconds": 3600
-            },
-            {
-                "singular": "jour",
-                "plural": "jours",
-                "seconds": 86400
-            },
-            {
-                "singular": "semaine",
-                "plural": "semaines",
-                "seconds": 604800
-            },
-            {
-                "singular": "mois",
-                "plural": "mois",
-                "seconds": 2626560
-            },
-            {
-                "singular": "année",
-                "plural": "années",
-                "seconds": 31557600
-            }
-        ])
+    const NamedNumberDic = {
+        "millier(s) d'": 3,
+        "million(s) d'": 6,
+        "milliard(s) d'": 9,
+        "billion(s) d'": 12,
+        "billiard(s) d'": 15,
+        "trillion(s) d'": 18,
+        "trilliard(s) d'": 21,
+        "quadrillion(s) d'": 24,
+        "quadrilliard(s) d'": 27,
+        "quintillion(s) d'": 30,
+        "quintilliard(s) d'": 33,
+        "sextillion(s) d'": 36,
+        "sextilliard(s) d'": 39,
+        "septillion(s) d'": 42,
+        "septilliard(s) d'": 45,
+        "octillion(s) d'": 48,
+        "octilliard(s) d'": 51,
+        "nonillion(s) d'": 54,
+        "nonilliard(s) d'": 57,
+        "décillion(s) d'": 60,
+        "décilliard(s) d'": 63,
+        "unodécillion(s) d'": 66,
+        "unodécilliard(s) d'": 69,
+        "duodécillion(s) d'": 72,
+        "duodécilliard(s) d'": 75,
+        "quinquavigintillion": 78,
+        "sesvigintillion": 81,
+        "septemvigintillion": 84,
+        "octovigintillion": 87,
+        "novemvigintillion": 90,
+        "trigintillion": 93,
+        "untrigintillion": 96,
+        "duotrigintillion": 99,
+        "googol": 100,
+        "trestrigintillion": 102,
+        "quattuortrigintillion": 105,
+        "quinquatrigintillion": 108,
+        "sestrigintillion": 111,
+        "septentrigintillion": 114,
+        "octotrigintillion": 117,
+        "noventrigintillion": 120,
+        "quadragintillion": 123,
+        "quinquagintillion": 153,
+        "sexagintillion": 183,
+        "septuagintillion": 213,
+        "octogintillion": 243,
+        "nonagintillion": 273,
+        "centillion": 303,
+        "uncentillion": 306,
+        "duocentillion": 309,
+        "trescentillion": 312,
+        "decicentillion": 333,
+        "undecicentillion": 336,
+        "viginticentillion": 363,
+        "unviginticentillion": 366,
+        "trigintacentillion": 393,
+        "quadragintacentillion": 423,
+        "quinquagintacentillion": 453,
+        "sexagintacentillion": 483,
+        "septuagintacentillion": 513,
+        "octogintacentillion": 543,
+        "nonagintacentillion": 573,
+        "ducentillion": 603,
+        "trecentillion": 903,
+        "quadringentillion": 1203,
+        "quingentillion": 1503,
+        "sescentillion": 1803,
+        "septingentillion": 2103,
+        "octingentillion": 2403,
+        "nongentillion": 2703,
+        "millinillion": 3003
+    };
+    hsimp.setNamedNumberDictionary(NamedNumberDic);
 
-        hsimp.setNamedNumberDictionary({
-           "millier(s) d'": 3,
-           "million(s) d'": 6,
-           "milliard(s) d'": 9,
-           "billion(s) d'": 12,
-           "billiard(s) d'": 15,
-           "trillion(s) d'": 18,
-           "trilliard(s) d'": 21,
-           "quadrillion(s) d'": 24,
-           "quadrilliard(s) d'": 27,
-           "quintillion(s) d'": 30,
-           "quintilliard(s) d'": 33,
-           "sextillion(s) d'": 36,
-           "sextilliard(s) d'": 39,
-           "septillion(s) d'": 42,
-           "septilliard(s) d'": 45,
-           "octillion(s) d'": 48,
-           "octilliard(s) d'": 51,
-           "nonillion(s) d'": 54,
-           "nonilliard(s) d'": 57,
-           "décillion(s) d'": 60,
-           "décilliard(s) d'": 63,
-           "unodécillion(s) d'": 66,
-           "unodécilliard(s) d'": 69,
-           "duodécillion(s) d'": 72,
-           "duodécilliard(s) d'": 75,
-           /*
-           "quinquavigintillion": 78,
-           "sesvigintillion": 81,
-           "septemvigintillion": 84,
-           "octovigintillion": 87,
-           "novemvigintillion": 90,
-           "trigintillion": 93,
-           "untrigintillion": 96,
-           "duotrigintillion": 99,
-           "googol": 100,
-           "trestrigintillion": 102,
-           "quattuortrigintillion": 105,
-           "quinquatrigintillion": 108,
-           "sestrigintillion": 111,
-           "septentrigintillion": 114,
-           "octotrigintillion": 117,
-           "noventrigintillion": 120,
-           "quadragintillion": 123,
-           "quinquagintillion": 153,
-           "sexagintillion": 183,
-           "septuagintillion": 213,
-           "octogintillion": 243,
-           "nonagintillion": 273,
-           "centillion": 303,
-           "uncentillion": 306,
-           "duocentillion": 309,
-           "trescentillion": 312,
-           "decicentillion": 333,
-           "undecicentillion": 336,
-           "viginticentillion": 363,
-           "unviginticentillion": 366,
-           "trigintacentillion": 393,
-           "quadragintacentillion": 423,
-           "quinquagintacentillion": 453,
-           "sexagintacentillion": 483,
-           "septuagintacentillion": 513,
-           "octogintacentillion": 543,
-           "nonagintacentillion": 573,
-           "ducentillion": 603,
-           "trecentillion": 903,
-           "quadringentillion": 1203,
-           "quingentillion": 1503,
-           "sescentillion": 1803,
-           "septingentillion": 2103,
-           "octingentillion": 2403,
-           "nongentillion": 2703,
-           "millinillion": 3003 */
-        })
+    // <span style='color: #c23333;'>
+    hsimp.setCheckerDictionary({
+        "common": {
+            "name": "<span style='color: #c23333;'>Mot de passe répendu: Fait partie du top {{ value }} des mots de passes les plus utilisés</span>",
+            "message": "Votre mot de passe est utilisé très fréquement. Il serait trouvé presque instantanément",
+            "conseil": "<a data-tracker-label=\"Dashlane: Mot de passe commun\" href=\"https://www.dashlane.com/fr/features/password-changer?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=CommonPassword&amp;utm_term=FR\">Apprenez à créer et à vous rappeler de mots de passe uniques et sécurisés pour chacun de vos comptes en ligne</a>"
+        },
+        "xkcd": {
+            "name": "xkcd",
+            "message": "I suspect the password crackers might be on to this one by now..."
+        },
+        "jeff": {
+            "name": "There's always a back door...",
+            "message": "\"The guy who made the software was called Jeff Jeffty Jeff. Born on the first of Jeff, nineteen-jeffty-jeff.\""
+        },
+        "lengthVeryShort": {
+            "name": "<span style='color: #db7d3a;'>Longueur: très court</span>",
+            "message": "Votre mot de passe est très court. Le plus long il est, le plus sécurisé il sera",
+            "conseil": "<a data-tracker-label=\"Dashlane: Trop court\" href=\"https://www.dashlane.com/fr/features/password-changer?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=lengthShort&amp;utm_term=FR\">Créez des mots de passe uniques et plus longs que vous n'oublierez jamais</a>"
+        },
+        "possiblyWord": {
+            "name": "<span style='color: #db7d3a;'>Possiblement un mot</span>",
+            "message": "Votre mot de passe ressemble à un mot qui pourrait être dans le dictionnaire ou à un nom. Si c'est un nom avec une signification personnelle il pourrait être facile à deviner. Si il vient du dictionnaire il pourra être trouver très rapidement.",
+            "conseil": "<a data-tracker-label=\"Dashlane: Probablement un mot\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=possiblyWord&amp;utm_term=FR\">Des mots de passe uniques et aléatoires préserveront la sécurité de vos comptes</a>"
+        },
+        "onlyNumbers": {
+            "name": "<span style='color: #db7d3a;'>Caractères variés: uniquement des nombres</span>",
+            "message": "Votre mot de passe ne contient que des nombres. Cela réduit drastiquement le nombre de combinaison possible",
+            "conseil": "<a data-tracker-label=\"Dashlane: Uniquement numérique\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=onlyNumbers&amp;utm_term=FR\">Créez et retenez des mots de passe plus complexes et sécurisez votre identité digitale</a>"
+        },
+        "wordAndNumber": {
+            "name": "<span style='color: #db7d3a;'>Possiblement un mot et un nombre</span>",
+            "message": "On dirait que votre mot de passe est juste la combinaison d'un mot et de quelques chiffres. C'est un assemblage très fréquent qui sera trouvé très rapidement.",
+            "conseil": "<a data-tracker-label=\"Dashlane: Probablement un mot et un nombre\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=wordAndNumber&amp;utm_term=FR\">Empêchez les hackers d'accèder à vos données avec des mots de passe sécurisés et complexes</a>"
+        },
+        "lengthShort": {
+            "name": "<span style='color: #db7d3a;'>Longueur: court</span>",
+            "message": "Votre mot de passe est plutôt court. Le plus long il est, le plus sécurisé il sera.",
+            "conseil": "<a data-tracker-label=\"Dashlane: Court\" href=\"https://www.dashlane.com/fr/features/password-changer?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=lengthShort&amp;utm_term=FR\">Créez des mots de passe uniques et plus longs que vous n'oublierez jamais</a>"
+        },
+        "justLetters": {
+            "name": "<span style='color: #376a82;'>Caractères variés: uniquement des lettres</span>",
+            "message": "Votre mot de passe ne contient que des lettres. L'ajout de nombres et de symboles peut le rendre bien plus sécurisé.",
+            "conseil": "<a data-tracker-label=\"Dashlane: Court\" href=\"https://www.dashlane.com/fr/features/password-changer?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=lengthShort&amp;utm_term=FR\">Créez des mots de passe uniques et plus longs que vous n'oublierez jamais</a>"
+        },
+        "noSymbols": {
+            "name": "<span style='color: #376a82;'>Caractères variés: pas de symboles</span>",
+            "message": "Votre mot de passe ne contient que des lettres et des chiffres. L'ajout de symboles peut rendre votre mot de passe plus sécurisé. N'oubliez pas que vous pouvez souvent utiliser des espaces dans les mots de passe.",
+            "conseil": "<a data-tracker-label=\"Dashlane: Pas de Symboles\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=noSymbols&amp;utm_term=FR\">Souvenez vous facilement de mots de passe plus complexes comportant des nombres, des lettres et des symboles</a>"
+        },
+        "telephone": {
+            "name": "<span style='color: #db7d3a;'>Possiblement un numéro de téléphone / une date</span>",
+            "message": "Votre mot de passe est probablement un numéro de téléphone ou une date. Si il a une signification personnelle il sera surement facile pour quelqu'un de le deviner.",
+            "conseil": "<a data-tracker-label=\"Dashlane: robablement un numéro de téléphone \\ une date\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=telephone&amp;utm_term=FR\">Générez des mots de passe complexes et sécurisés pour protéger tous vos comptes en ligne</a>"
+        },
+        "repeatedPattern": {
+            "name": "<span style='color: #db7d3a;'>Répétitions</span>",
+            "message": "Des suites de caractères ou de motifs peuvent rendre votre mot de passe plus prévisible",
+            "conseil": "<a data-tracker-label=\"Dashlane: Motif répété\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=repeatedPattern&amp;utm_term=FR\">Suprenez les hackers avec des mots de passe aléatoires que vous n'oublierez jamais</a>"
+        },
+        "nonStandardCharacters": {
+            "name": "<span style='color: #378241;'>Caractères variés: caractères spéciaux</span>",
+            "message": "Votre mot de passe contient un caractère qui n'est pas présent sur le clavier. Cela devrait le rendre plus sécurisé.",
+            "conseil": "<a data-tracker-label=\"Dashlane: Caractères non standards\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=nonStandardCharacters&amp;utm_term=FR\">N'oubliez jamais vos mots de passe complexes et sécurisés en utilisant un gestionnaire de mots de passe</a>"
 
-        // <span style='color: #c23333;'>
-        hsimp.setCheckerDictionary({
-            "common": {
-                "name": "<span style='color: #c23333;'>Mot de passe répendu: Fait partie du top {{ value }} des mots de passes les plus utilisés</span>",
-                "message": "Your password is very commonly used. It would be cracked almost instantly."
-            },
-            "xkcd": {
-                "name": "xkcd",
-                "message": "I suspect the password crackers might be on to this one by now..."
-            },
-            "jeff": {
-                "name": "There's always a back door...",
-                "message": "\"The guy who made the software was called Jeff Jeffty Jeff. Born on the first of Jeff, nineteen-jeffty-jeff.\""
-            },
-            "lengthVeryShort": {
-                "name": "<span style='color: #db7d3a;'>Longueur: très court</span>",
-                "message": "Your password is very short. The longer a password is the more secure it will be."
-            },
-            "possiblyWord": {
-                "name": "<span style='color: #db7d3a;'>Possiblement un mot</span>",
-                "message": "Your password looks like it could be a dictionary word or a name. If it's a name with personal significance it might be easy to guess. If it's a dictionary word it could be cracked very quickly."
-            },
-            "onlyNumbers": {
-                "name": "<span style='color: #db7d3a;'>Caractères variés: uniquement des nombres</span>",
-                "message": "Your password only contains numbers. This reduces the number of possible combinations dramatically."
-            },
-            "wordAndNumber": {
-                "name": "<span style='color: #db7d3a;'>Possiblement un mot et un nombre</span>",
-                "message": "Your password looks like it might just be a word and a few digits. This is a very common pattern and would be cracked very quickly."
-            },
-            "lengthShort": {
-                "name": "<span style='color: #db7d3a;'>Longueur: court</span>",
-                "message": "Your password is quite short. The longer a password is the more secure it will be."
-            },
-            "justLetters": {
-                "name": "<span style='color: #376a82;'>Caractères variés: uniquement des lettres</span>",
-                "message": "Your password only contains letters. Adding numbers and symbols can make your password more secure."
-            },
-            "noSymbols": {
-                "name": "<span style='color: #376a82;'>Caractères variés: pas de symboles</span>",
-                "message": "Your password only contains numbers and letters. Adding a symbol can make your password more secure. Don't forget you can often use spaces in passwords."
-            },
-            "telephone": {
-                "name": "<span style='color: #db7d3a;'>Possiblement un numéro de téléphone / une date</span>",
-                "message": "Your password looks like it might be a telephone number or a date. If it is and it has personal significance then it might be very easy for someone to guess."
-            },
-            "repeatedPattern": {
-                "name": "<span style='color: #db7d3a;'>Répétitions</span>",
-                "message": "Repeated characters or patterns can make your password more predictable."
-            },
-            "nonStandardCharacters": {
-                "name": "<span style='color: #378241;'>Caractères variés: caractères spéciaux</span>",
-                "message": "Your password contains a non-keyboard character. This should make it more secure."
-            },
-            "lengthLong": {
-                "name": "<span style='color: #378241;'>Longueur: long</span>",
-                "message": "Your password is over sixteen characters long."
-            }
-        });
+        },
+        "lengthLong": {
+            "name": "<span style='color: #378241;'>Longueur: long</span>",
+            "message": "Votre mot de passe fait plus de seize caractères de long.",
+            "conseil": "<a data-tracker-label=\"Dashlane: Long\" href=\"https://www.dashlane.com/fr/lp/neverforget-teal?utm_source=HowSecureIsMyPassword&amp;utm_medium=affiliates&amp;utm_campaign=lengthLong&amp;utm_term=FR\">N'oubliez jamais votre mot de passe long et sécurisé grâce à l'utilisation d'un gestionnaire de mot de passe</a>"
+        }
+    });
 
 
+    // Run the HSIMP
+    attachTo(passwordInput);
+    }
+    (this.document)
+    )
+    ;
 
-        // Run the HSIMP
-        console.log(attachTo)
-        attachTo(passwordInput);
-    }(this.document));
-
-    var i = setInterval(function(){}, 100);
+    var i = setInterval(function () {
+    }, 100);
 </script>
 </body>
 
